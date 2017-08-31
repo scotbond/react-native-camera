@@ -95,6 +95,9 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
 
     public void setCameraFlip(final boolean flip) {
         this._flip = flip;
+        if ((_surfaceTextureWidth > 0) && (_surfaceTextureHeight > 0)) {
+            this.configureTransform(_surfaceTextureWidth, _surfaceTextureHeight);
+        }
     }
 
     public void setCameraType(final int type) {
