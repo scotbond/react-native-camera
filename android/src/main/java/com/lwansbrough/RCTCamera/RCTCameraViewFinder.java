@@ -11,6 +11,7 @@ import android.hardware.Camera;
 import android.view.MotionEvent;
 import android.view.TextureView;
 import android.os.AsyncTask;
+import android.graphics.Matrix;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
@@ -42,6 +43,7 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
     private boolean _isStopping;
     private Camera _camera;
     private float mFingerSpacing;
+    private boolean _flip;
 
     // concurrency lock for barcode scanner to avoid flooding the runtime
     public static volatile boolean barcodeScannerTaskLock = false;
@@ -61,6 +63,7 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
         _surfaceTexture = surface;
         _surfaceTextureWidth = width;
         _surfaceTextureHeight = height;
+        this.configureTransform(width, height);
         startCamera();
     }
 
@@ -68,6 +71,7 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
         _surfaceTextureWidth = width;
         _surfaceTextureHeight = height;
+        this.configureTransform(width, height);
     }
 
     @Override
@@ -87,6 +91,10 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
         int width = RCTCamera.getInstance().getPreviewWidth(this._cameraType);
         int height = RCTCamera.getInstance().getPreviewHeight(this._cameraType);
         return ((float) width) / ((float) height);
+    }
+
+    public void setCameraFlip(final boolean flip) {
+        this._flip = flip;
     }
 
     public void setCameraType(final int type) {
@@ -120,6 +128,13 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
         RCTCamera.getInstance().setFlashMode(_cameraType, flashMode);
     }
 
+    private void configureTransform(float width, float height) {
+        float xScale = _flip ? -1.0f : 1.0f;
+        Matrix matrix = new Matrix();
+        matrix.postScale(xScale, 1.0f, width / 2, height / 2);
+        this.setTransform(matrix);
+    }
+    
     private void startPreview() {
         if (_surfaceTexture != null) {
             startCamera();

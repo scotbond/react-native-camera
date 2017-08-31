@@ -36,6 +36,10 @@ function convertNativeProps(props) {
     newProps.type = Camera.constants.Type[props.type];
   }
 
+	if (typeof props.flip === 'string') {
+		newProps.type = Camera.constants.Type[props.type];
+	}
+
   if (typeof props.captureQuality === 'string') {
     newProps.captureQuality = Camera.constants.CaptureQuality[props.captureQuality];
   }
@@ -116,12 +120,14 @@ export default class Camera extends Component {
     type: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
-    ])
+    ]),
+		flip: PropTypes.bool
   };
 
   static defaultProps = {
     aspect: CameraManager.Aspect.fill,
     type: CameraManager.Type.back,
+		flip: false,
     orientation: CameraManager.Orientation.auto,
     fixOrientation: false,
     captureAudio: false,
@@ -220,6 +226,7 @@ export default class Camera extends Component {
       target: props.captureTarget,
       quality: props.captureQuality,
       type: props.type,
+			flip: props.flip,
       title: '',
       description: '',
       mirrorImage: props.mirrorImage,

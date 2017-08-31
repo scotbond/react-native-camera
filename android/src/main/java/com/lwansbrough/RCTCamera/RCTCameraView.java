@@ -23,6 +23,7 @@ public class RCTCameraView extends ViewGroup {
     private String _captureQuality = "high";
     private int _torchMode = -1;
     private int _flashMode = -1;
+    private boolean _flip = false;
 
     public RCTCameraView(Context context) {
         super(context);
@@ -77,6 +78,13 @@ public class RCTCameraView extends ViewGroup {
                 _viewFinder.setTorchMode(this._torchMode);
             }
             addView(_viewFinder);
+        }
+    }
+
+    public void setCameraFlip(final boolean flip) {
+        this._flip = flip;
+        if (this._viewFinder != null) {
+            this._viewFinder.setCameraFlip(flip);
         }
     }
 

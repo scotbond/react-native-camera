@@ -45,6 +45,11 @@ public class RCTCameraViewManager extends ViewGroupManager<RCTCameraView> {
         view.setCameraType(type);
     }
 
+    @ReactProp(name = "flip")
+    public void setType(RCTCameraView view, boolean flip) {
+        view.setCameraFlip(flip);
+    }
+
     @ReactProp(name = "captureQuality")
     public void setCaptureQuality(RCTCameraView view, String captureQuality) {
         view.setCaptureQuality(captureQuality);
